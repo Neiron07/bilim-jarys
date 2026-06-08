@@ -1,0 +1,2698 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bilim Jarys</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Exo+2:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════
+   RESET & BASE
+═══════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #070b14;
+  --bg2: #0c1022;
+  --bg3: #111827;
+  --card: rgba(13,19,36,0.85);
+  --card2: rgba(17,24,40,0.9);
+  --border: rgba(99,102,241,0.18);
+  --border2: rgba(99,102,241,0.45);
+  --p: #6366f1;
+  --p2: #818cf8;
+  --violet: #8b5cf6;
+  --blue: #3b82f6;
+  --gold: #f59e0b;
+  --green: #10b981;
+  --red: #ef4444;
+  --muted: rgba(148,163,184,0.65);
+  --text: #e2e8f0;
+  --sidebar: 230px;
+}
+
+html, body {
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Exo 2', sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+
+button { cursor: pointer; font-family: inherit; border: none; outline: none; }
+a { text-decoration: none; color: inherit; }
+input, select { font-family: inherit; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: var(--bg2); }
+::-webkit-scrollbar-thumb { background: var(--p); border-radius: 2px; }
+
+/* ═══════════════════════════════════════════════
+   LAYOUT
+═══════════════════════════════════════════════ */
+#app {
+  display: flex;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* BG glows */
+#app::before, #app::after {
+  content: '';
+  position: fixed;
+  pointer-events: none;
+  z-index: 0;
+  border-radius: 50%;
+  filter: blur(80px);
+}
+#app::before {
+  width: 500px; height: 500px;
+  top: -150px; left: 10%;
+  background: radial-gradient(circle, rgba(99,102,241,0.07), transparent 70%);
+}
+#app::after {
+  width: 400px; height: 400px;
+  bottom: -100px; right: 10%;
+  background: radial-gradient(circle, rgba(139,92,246,0.06), transparent 70%);
+}
+
+/* Grid bg */
+#app {
+  background-image:
+    linear-gradient(rgba(99,102,241,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(99,102,241,0.025) 1px, transparent 1px);
+  background-size: 44px 44px;
+}
+
+/* ═══════════════════════════════════════════════
+   SIDEBAR
+═══════════════════════════════════════════════ */
+#sidebar {
+  width: var(--sidebar);
+  min-height: 100vh;
+  position: fixed;
+  left: 0; top: 0;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  background: rgba(7,11,20,0.92);
+  backdrop-filter: blur(24px);
+  border-right: 1px solid var(--border);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 24px 20px 16px;
+}
+.logo-icon {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--p), var(--violet));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  box-shadow: 0 0 20px rgba(99,102,241,0.4);
+}
+.logo-text-top {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 1.15rem;
+  color: white;
+  letter-spacing: 0.04em;
+  line-height: 1;
+}
+.logo-text-bottom {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  color: var(--p2);
+  text-transform: uppercase;
+}
+
+.sidebar-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 4px 16px 12px;
+}
+
+.nav-list {
+  flex: 1;
+  padding: 0 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nav-btn {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 10px 13px;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--muted);
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 600;
+  font-size: 0.92rem;
+  letter-spacing: 0.03em;
+  border: 1px solid transparent;
+  transition: all 0.18s;
+  width: 100%;
+  text-align: left;
+}
+.nav-btn:hover {
+  background: rgba(99,102,241,0.08);
+  color: var(--text);
+  border-color: var(--border);
+}
+.nav-btn.active {
+  background: rgba(99,102,241,0.15);
+  color: white;
+  border-color: var(--border2);
+}
+.nav-btn.active .nav-icon { color: var(--p); }
+.nav-icon { font-size: 1.1rem; width: 20px; text-align: center; }
+.nav-badge {
+  margin-left: auto;
+  background: rgba(99,102,241,0.3);
+  color: #a5b4fc;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 1px 7px;
+  border-radius: 999px;
+  font-family: 'Rajdhani', sans-serif;
+}
+
+.sidebar-user {
+  margin: 10px;
+  padding: 12px;
+  border-radius: 12px;
+  background: rgba(99,102,241,0.07);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: all 0.18s;
+}
+.sidebar-user:hover { background: rgba(99,102,241,0.12); border-color: var(--border2); }
+.sidebar-avatar {
+  width: 36px; height: 36px;
+  border-radius: 9px;
+  background: linear-gradient(135deg, rgba(99,102,241,0.3), rgba(139,92,246,0.3));
+  border: 1px solid var(--border2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem; flex-shrink: 0;
+}
+.sidebar-user-name {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: white;
+}
+.sidebar-user-rating { font-size: 0.72rem; color: var(--muted); }
+.sidebar-coins {
+  margin-left: auto;
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 0.78rem;
+  background: rgba(245,158,11,0.15);
+  color: var(--gold);
+  border: 1px solid rgba(245,158,11,0.3);
+  padding: 3px 8px;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+/* ═══════════════════════════════════════════════
+   MAIN CONTENT
+═══════════════════════════════════════════════ */
+#main {
+  margin-left: var(--sidebar);
+  flex: 1;
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
+}
+
+.screen { display: none; padding: 28px 32px; max-width: 860px; }
+.screen.active { display: block; animation: fadeUp 0.32s ease; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ═══════════════════════════════════════════════
+   BOTTOM NAV (mobile)
+═══════════════════════════════════════════════ */
+#bottom-nav {
+  display: none;
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  z-index: 50;
+  background: rgba(7,11,20,0.96);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border);
+  height: 60px;
+}
+.bn-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  height: 100%;
+}
+.bn-btn {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 3px;
+  background: transparent;
+  color: var(--muted);
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 600;
+  font-size: 0.62rem;
+  letter-spacing: 0.03em;
+  transition: color 0.15s;
+  border: none;
+  padding: 6px 0;
+}
+.bn-btn .bn-icon { font-size: 1.1rem; line-height: 1; }
+.bn-btn.active { color: var(--p); }
+
+/* ═══════════════════════════════════════════════
+   TYPOGRAPHY HELPERS
+═══════════════════════════════════════════════ */
+.page-eyebrow {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+.page-title {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 1.8rem;
+  color: white;
+  letter-spacing: 0.02em;
+  line-height: 1.1;
+}
+.section-label {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 0.82rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+.dot-live {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--green);
+  flex-shrink: 0;
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(16,185,129,0.4); }
+  50% { box-shadow: 0 0 0 5px rgba(16,185,129,0); }
+}
+
+/* Gradient text */
+.gtext {
+  background: linear-gradient(135deg, #818cf8, #c4b5fd, #60a5fa);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.gtext-gold {
+  background: linear-gradient(135deg, #f59e0b, #fbbf24, #d97706);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ═══════════════════════════════════════════════
+   GLASS CARD
+═══════════════════════════════════════════════ */
+.card {
+  background: var(--card);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 18px;
+}
+.card-bright {
+  background: var(--card2);
+  backdrop-filter: blur(24px);
+  border: 1px solid var(--border2);
+  border-radius: 16px;
+  padding: 18px;
+}
+
+/* ═══════════════════════════════════════════════
+   BUTTONS
+═══════════════════════════════════════════════ */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 6px;
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-radius: 10px;
+  transition: all 0.18s;
+  padding: 9px 18px;
+  font-size: 0.8rem;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.btn::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.08), transparent);
+  opacity: 0; transition: opacity 0.18s;
+}
+.btn:hover::before { opacity: 1; }
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--p), #4f46e5);
+  color: white;
+  border: 1px solid rgba(99,102,241,0.4);
+}
+.btn-primary:hover { box-shadow: 0 0 22px rgba(99,102,241,0.5); transform: translateY(-1px); }
+.btn-primary:active { transform: translateY(0); }
+
+.btn-gold {
+  background: linear-gradient(135deg, #d97706, #b45309);
+  color: white;
+  border: 1px solid rgba(245,158,11,0.4);
+}
+.btn-gold:hover { box-shadow: 0 0 22px rgba(245,158,11,0.4); transform: translateY(-1px); }
+
+.btn-green {
+  background: linear-gradient(135deg, #059669, #047857);
+  color: white;
+  border: 1px solid rgba(16,185,129,0.4);
+}
+.btn-green:hover { box-shadow: 0 0 22px rgba(16,185,129,0.4); transform: translateY(-1px); }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--border);
+}
+.btn-ghost:hover { border-color: var(--border2); color: white; background: rgba(99,102,241,0.08); }
+
+.btn-sm { padding: 6px 14px; font-size: 0.72rem; border-radius: 8px; }
+.btn-lg { padding: 12px 28px; font-size: 0.88rem; }
+.btn-full { width: 100%; }
+
+.btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* ═══════════════════════════════════════════════
+   BADGES
+═══════════════════════════════════════════════ */
+.badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+}
+.badge-purple { background: rgba(99,102,241,0.2); color: #a5b4fc; border: 1px solid rgba(99,102,241,0.3); }
+.badge-gold { background: rgba(245,158,11,0.15); color: var(--gold); border: 1px solid rgba(245,158,11,0.3); }
+.badge-green { background: rgba(16,185,129,0.15); color: var(--green); border: 1px solid rgba(16,185,129,0.3); }
+.badge-red { background: rgba(239,68,68,0.15); color: var(--red); border: 1px solid rgba(239,68,68,0.3); }
+.badge-blue { background: rgba(59,130,246,0.15); color: #60a5fa; border: 1px solid rgba(59,130,246,0.3); }
+.badge-violet { background: rgba(139,92,246,0.15); color: #c4b5fd; border: 1px solid rgba(139,92,246,0.3); }
+
+/* ═══════════════════════════════════════════════
+   PROGRESS BAR
+═══════════════════════════════════════════════ */
+.pbar-track {
+  height: 5px;
+  background: rgba(99,102,241,0.15);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.pbar-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--p), var(--violet));
+  transition: width 0.4s ease;
+}
+.pbar-fill.gold { background: linear-gradient(90deg, var(--gold), #fbbf24); }
+.pbar-fill.green { background: linear-gradient(90deg, var(--green), #34d399); }
+.pbar-fill.red { background: linear-gradient(90deg, var(--red), #f87171); }
+
+/* ═══════════════════════════════════════════════
+   HEADER ROW
+═══════════════════════════════════════════════ */
+.header-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+.stat-pills {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+}
+.stat-pill {
+  display: flex; align-items: center; gap: 6px;
+  padding: 6px 12px;
+  border-radius: 10px;
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 0.82rem;
+}
+.stat-pill-rating {
+  background: rgba(99,102,241,0.15);
+  border: 1px solid rgba(99,102,241,0.3);
+  color: #a5b4fc;
+}
+.stat-pill-coins {
+  background: rgba(245,158,11,0.12);
+  border: 1px solid rgba(245,158,11,0.3);
+  color: var(--gold);
+}
+
+/* ═══════════════════════════════════════════════
+   SCREEN 1: TOURNAMENTS
+═══════════════════════════════════════════════ */
+.daily-card {
+  background: linear-gradient(135deg, rgba(245,158,11,0.08), rgba(217,119,6,0.04));
+  border: 1px solid rgba(245,158,11,0.28);
+  border-radius: 18px;
+  padding: 20px;
+  margin-bottom: 28px;
+  position: relative;
+  overflow: hidden;
+}
+.daily-card::before {
+  content: '🎯';
+  position: absolute;
+  right: 20px; top: 50%;
+  transform: translateY(-50%);
+  font-size: 3.5rem;
+  opacity: 0.07;
+  pointer-events: none;
+}
+.daily-title {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: white;
+  margin-bottom: 4px;
+  display: flex; align-items: center; gap: 8px;
+}
+.daily-desc { font-size: 0.83rem; color: var(--muted); margin-bottom: 14px; }
+.daily-progress-row { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.daily-progress-label { font-family: 'Rajdhani', sans-serif; font-size: 0.76rem; color: var(--gold); font-weight: 700; }
+
+.t-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; margin-bottom: 28px; }
+
+.t-card {
+  border-radius: 16px;
+  padding: 16px;
+  border: 1px solid transparent;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.22s;
+  cursor: pointer;
+  background: var(--card);
+  backdrop-filter: blur(16px);
+}
+.t-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  border-radius: 16px 16px 0 0;
+}
+.t-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 36px rgba(0,0,0,0.3);
+}
+.t-card-icon {
+  width: 42px; height: 42px;
+  border-radius: 11px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.3rem;
+  margin-bottom: 12px;
+  flex-shrink: 0;
+}
+.t-card-name {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  color: white;
+  margin-bottom: 4px;
+}
+.t-card-meta {
+  display: flex; gap: 12px; flex-wrap: wrap;
+  font-size: 0.73rem;
+  color: var(--muted);
+  margin-bottom: 12px;
+  align-items: center;
+}
+.t-card-meta span { display: flex; align-items: center; gap: 4px; }
+.prize-chip {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 0.72rem;
+  background: rgba(245,158,11,0.15);
+  color: var(--gold);
+  border: 1px solid rgba(245,158,11,0.25);
+  margin-bottom: 12px;
+}
+
+.upcoming-list { display: flex; flex-direction: column; gap: 10px; }
+.upcoming-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  transition: all 0.18s;
+}
+.upcoming-item:hover { border-color: var(--border2); background: rgba(17,24,40,0.95); }
+.upcoming-icon { font-size: 1.4rem; flex-shrink: 0; }
+.upcoming-name { font-family: 'Rajdhani', sans-serif; font-weight: 700; color: white; font-size: 0.92rem; }
+.upcoming-date { font-size: 0.73rem; color: var(--muted); }
+.upcoming-prize { margin-left: auto; }
+
+/* ═══════════════════════════════════════════════
+   SCREEN 2: TOURNAMENT (QUIZ)
+═══════════════════════════════════════════════ */
+.quiz-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 20px; gap: 12px; flex-wrap: wrap;
+}
+.quiz-title-name {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: white;
+}
+.timer-chip {
+  display: flex; align-items: center; gap: 6px;
+  padding: 7px 14px;
+  border-radius: 10px;
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 0.88rem;
+  background: rgba(99,102,241,0.15);
+  border: 1px solid rgba(99,102,241,0.3);
+  color: #a5b4fc;
+  transition: all 0.3s;
+}
+.timer-chip.urgent { background: rgba(239,68,68,0.15); border-color: rgba(239,68,68,0.4); color: #f87171; }
+.timer-chip.warn { background: rgba(245,158,11,0.15); border-color: rgba(245,158,11,0.3); color: var(--gold); }
+
+.q-dots { display: flex; gap: 5px; margin-bottom: 20px; flex-wrap: wrap; }
+.q-dot {
+  height: 6px;
+  flex: 1;
+  min-width: 6px;
+  max-width: 40px;
+  border-radius: 3px;
+  background: rgba(99,102,241,0.18);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.q-dot.active { background: var(--p); }
+.q-dot.answered-right { background: var(--green); }
+.q-dot.answered-wrong { background: var(--red); }
+
+.q-card {
+  background: var(--card2);
+  border: 1px solid var(--border2);
+  border-radius: 18px;
+  padding: 24px;
+  margin-bottom: 16px;
+}
+.q-num {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+.q-text {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 20px;
+  line-height: 1.45;
+}
+.q-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.q-opt {
+  padding: 13px 16px;
+  border-radius: 12px;
+  background: rgba(99,102,241,0.07);
+  border: 1.5px solid rgba(99,102,241,0.2);
+  color: var(--text);
+  font-size: 0.88rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.16s;
+  display: flex; align-items: center; gap: 9px;
+  text-align: left;
+}
+.q-opt:hover:not(:disabled) {
+  background: rgba(99,102,241,0.14);
+  border-color: rgba(99,102,241,0.45);
+}
+.q-opt.selected-right {
+  background: rgba(16,185,129,0.15);
+  border-color: rgba(16,185,129,0.55);
+  color: #6ee7b7;
+}
+.q-opt.selected-wrong {
+  background: rgba(239,68,68,0.15);
+  border-color: rgba(239,68,68,0.55);
+  color: #fca5a5;
+}
+.q-opt.correct-reveal {
+  background: rgba(16,185,129,0.1);
+  border-color: rgba(16,185,129,0.35);
+  color: var(--green);
+}
+.q-opt:disabled { cursor: default; }
+.q-opt-letter {
+  width: 26px; height: 26px;
+  border-radius: 7px;
+  background: rgba(255,255,255,0.07);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 0.78rem;
+  flex-shrink: 0;
+}
+
+.feedback-bar {
+  padding: 11px 16px;
+  border-radius: 10px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+  display: none;
+  animation: fadeUp 0.2s ease;
+}
+.feedback-bar.right { background: rgba(16,185,129,0.15); color: #6ee7b7; border: 1px solid rgba(16,185,129,0.3); }
+.feedback-bar.wrong { background: rgba(239,68,68,0.12); color: #fca5a5; border: 1px solid rgba(239,68,68,0.25); }
+.feedback-bar.show { display: block; }
+
+.q-nav { display: flex; gap: 10px; }
+
+/* ═══════════════════════════════════════════════
+   SCREEN 3: RESULTS
+═══════════════════════════════════════════════ */
+.result-screen { text-align: center; padding: 40px 20px; }
+.result-trophy { font-size: 5rem; margin-bottom: 12px; animation: float 3s ease-in-out infinite; }
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+
+.result-eyebrow {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 6px;
+}
+.result-place {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 4rem;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.result-total { font-size: 0.9rem; color: var(--muted); margin-bottom: 28px; }
+
+.result-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  max-width: 420px;
+  margin: 0 auto 24px;
+}
+.result-stat {
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px 10px;
+}
+.result-stat-val {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 1.6rem;
+  margin-bottom: 2px;
+}
+.result-stat-label { font-size: 0.7rem; color: var(--muted); }
+
+.result-rewards {
+  max-width: 420px;
+  margin: 0 auto 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.reward-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1px solid;
+}
+.reward-row-gold { background: rgba(245,158,11,0.08); border-color: rgba(245,158,11,0.25); }
+.reward-row-green { background: rgba(16,185,129,0.08); border-color: rgba(16,185,129,0.25); }
+.reward-row-red { background: rgba(239,68,68,0.08); border-color: rgba(239,68,68,0.2); }
+.reward-label { font-size: 0.82rem; display: flex; align-items: center; gap: 8px; }
+.reward-val {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+/* ═══════════════════════════════════════════════
+   SCREEN 4: LEADERBOARD
+═══════════════════════════════════════════════ */
+.lb-filters { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+.lb-filter {
+  padding: 7px 16px;
+  border-radius: 10px;
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 0.76rem;
+  letter-spacing: 0.04em;
+  background: rgba(99,102,241,0.07);
+  border: 1px solid rgba(99,102,241,0.18);
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.lb-filter:hover, .lb-filter.active {
+  background: rgba(99,102,241,0.2);
+  border-color: rgba(99,102,241,0.45);
+  color: white;
+}
+
+.podium {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr 1fr;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+.podium-card {
+  border-radius: 16px;
+  padding: 16px 12px;
+  text-align: center;
+  border: 1px solid;
+  position: relative;
+  overflow: hidden;
+}
+.podium-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+}
+.podium-1 {
+  background: rgba(245,158,11,0.07);
+  border-color: rgba(245,158,11,0.35);
+  box-shadow: 0 0 28px rgba(245,158,11,0.1);
+}
+.podium-1::before { background: linear-gradient(90deg, transparent, var(--gold), transparent); }
+.podium-2 {
+  background: rgba(148,163,184,0.06);
+  border-color: rgba(148,163,184,0.25);
+  margin-top: 18px;
+}
+.podium-2::before { background: linear-gradient(90deg, transparent, #94a3b8, transparent); }
+.podium-3 {
+  background: rgba(180,83,9,0.06);
+  border-color: rgba(180,83,9,0.25);
+  margin-top: 32px;
+}
+.podium-3::before { background: linear-gradient(90deg, transparent, #b45309, transparent); }
+
+.podium-avatar { font-size: 2rem; margin-bottom: 6px; }
+.podium-rank {
+  width: 28px; height: 28px;
+  border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 0.85rem;
+  color: white; margin: 0 auto 6px;
+}
+.r1 { background: linear-gradient(135deg, #f59e0b, #d97706); }
+.r2 { background: linear-gradient(135deg, #94a3b8, #64748b); }
+.r3 { background: linear-gradient(135deg, #b45309, #92400e); }
+
+.podium-user {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 0.82rem;
+  color: white;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.podium-score { font-size: 0.72rem; margin-top: 3px; }
+
+.lb-table {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+}
+.lb-head {
+  display: grid;
+  grid-template-columns: 50px 1fr 100px 80px;
+  padding: 11px 16px;
+  background: rgba(99,102,241,0.08);
+  border-bottom: 1px solid var(--border);
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--muted); font-weight: 700;
+}
+.lb-row {
+  display: grid;
+  grid-template-columns: 50px 1fr 100px 80px;
+  padding: 12px 16px;
+  align-items: center;
+  border-bottom: 1px solid rgba(99,102,241,0.07);
+  transition: background 0.15s;
+}
+.lb-row:last-child { border-bottom: none; }
+.lb-row:hover { background: rgba(99,102,241,0.05); }
+.lb-row.me { background: rgba(99,102,241,0.1); border-left: 2px solid var(--p); }
+.lb-rank { font-family: 'Rajdhani', sans-serif; font-weight: 700; color: var(--muted); font-size: 0.88rem; }
+.lb-user { display: flex; align-items: center; gap: 9px; overflow: hidden; }
+.lb-user-av { font-size: 1.2rem; flex-shrink: 0; }
+.lb-user-name { font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 0.88rem; color: white; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lb-user-title { font-size: 0.68rem; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lb-score { font-family: 'Rajdhani', sans-serif; font-weight: 700; color: var(--p2); font-size: 0.88rem; }
+.lb-change { font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 0.8rem; }
+.lb-change.up { color: var(--green); }
+.lb-change.down { color: var(--red); }
+.lb-change.same { color: var(--muted); }
+
+/* ═══════════════════════════════════════════════
+   SCREEN 5: PROFILE + SHOP
+═══════════════════════════════════════════════ */
+.tabs { display: flex; gap: 6px; margin-bottom: 22px; }
+.tab-btn {
+  padding: 8px 18px;
+  border-radius: 10px;
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  background: rgba(99,102,241,0.07);
+  border: 1px solid rgba(99,102,241,0.15);
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.tab-btn:hover, .tab-btn.active {
+  background: rgba(99,102,241,0.22);
+  border-color: rgba(99,102,241,0.45);
+  color: white;
+}
+
+.profile-hero {
+  background: var(--card2);
+  border: 1px solid var(--border2);
+  border-radius: 20px;
+  padding: 24px;
+  margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
+}
+.profile-hero::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--p), var(--violet), var(--blue));
+}
+.profile-hero-inner { display: flex; gap: 18px; align-items: flex-start; }
+.profile-av-wrap { position: relative; flex-shrink: 0; }
+.profile-av {
+  width: 76px; height: 76px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(99,102,241,0.3), rgba(139,92,246,0.25));
+  border: 2px solid rgba(99,102,241,0.45);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2.2rem;
+  box-shadow: 0 0 28px rgba(99,102,241,0.25);
+}
+.profile-lv {
+  position: absolute; bottom: -4px; right: -4px;
+  width: 24px; height: 24px;
+  border-radius: 7px;
+  background: linear-gradient(135deg, var(--p), var(--violet));
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Rajdhani', sans-serif; font-weight: 700;
+  font-size: 0.72rem; color: white;
+  border: 2px solid var(--bg);
+}
+.profile-name {
+  font-family: 'Rajdhani', sans-serif; font-weight: 700;
+  font-size: 1.5rem; color: white; letter-spacing: 0.02em;
+}
+.profile-handle { font-size: 0.78rem; color: var(--muted); margin-bottom: 8px; }
+.profile-title-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 3px 10px; border-radius: 8px;
+  background: rgba(99,102,241,0.18);
+  border: 1px solid rgba(99,102,241,0.35);
+  color: #a5b4fc;
+  font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 0.72rem;
+  margin-bottom: 10px;
+}
+.profile-meta { display: flex; gap: 16px; flex-wrap: wrap; font-size: 0.78rem; color: var(--muted); align-items: center; }
+.profile-meta-val { font-family: 'Rajdhani', sans-serif; font-weight: 700; color: var(--p2); }
+
+.stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
+.stat-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  padding: 14px 10px;
+  text-align: center;
+}
+.stat-card-icon { font-size: 1.2rem; margin-bottom: 6px; }
+.stat-card-val { font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 1.4rem; margin-bottom: 2px; }
+.stat-card-label { font-size: 0.68rem; color: var(--muted); }
+
+.ach-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+.ach-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px 12px;
+  text-align: center;
+  transition: all 0.18s;
+}
+.ach-card.unlocked { border-color: rgba(99,102,241,0.3); }
+.ach-card.locked { opacity: 0.38; filter: grayscale(0.8); }
+.ach-card:hover { transform: scale(1.03); }
+.ach-emoji { font-size: 1.9rem; margin-bottom: 6px; }
+.ach-name { font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 0.82rem; color: white; margin-bottom: 3px; }
+.ach-desc { font-size: 0.68rem; color: var(--muted); line-height: 1.4; }
+
+.shop-cat-filter { display: flex; gap: 8px; margin-bottom: 18px; flex-wrap: wrap; }
+.shop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 14px; }
+.shop-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 16px 14px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.2s;
+}
+.shop-card:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(0,0,0,0.25); }
+.shop-card.owned { border-color: rgba(16,185,129,0.35); background: rgba(16,185,129,0.04); }
+.shop-card.legendary-glow { border-color: rgba(245,158,11,0.3); box-shadow: 0 0 20px rgba(245,158,11,0.08); }
+.shop-card-top-line {
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+}
+.shop-img { font-size: 2.4rem; margin-bottom: 8px; }
+.shop-name { font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 0.85rem; color: white; margin-bottom: 3px; }
+.shop-desc { font-size: 0.68rem; color: var(--muted); margin-bottom: 10px; line-height: 1.4; }
+.shop-rarity {
+  display: inline-flex; align-items: center;
+  padding: 2px 8px; border-radius: 999px;
+  font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 0.65rem;
+  letter-spacing: 0.04em; margin-bottom: 10px;
+}
+.r-common { background: rgba(148,163,184,0.15); color: #94a3b8; border: 1px solid rgba(148,163,184,0.25); }
+.r-rare { background: rgba(59,130,246,0.12); color: #60a5fa; border: 1px solid rgba(59,130,246,0.25); }
+.r-epic { background: rgba(139,92,246,0.12); color: #c4b5fd; border: 1px solid rgba(139,92,246,0.25); }
+.r-legendary { background: rgba(245,158,11,0.12); color: var(--gold); border: 1px solid rgba(245,158,11,0.25); }
+
+.owned-check {
+  position: absolute; top: 9px; right: 9px;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: var(--green);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem; color: white;
+  border: 2px solid var(--bg);
+}
+
+/* Toast */
+#toast {
+  position: fixed; bottom: 80px; left: 50%;
+  transform: translateX(-50%) translateY(0);
+  background: rgba(16,185,129,0.15);
+  border: 1px solid rgba(16,185,129,0.4);
+  color: #6ee7b7;
+  padding: 10px 22px;
+  border-radius: 12px;
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 600; font-size: 0.82rem;
+  backdrop-filter: blur(16px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s;
+  z-index: 200;
+  white-space: nowrap;
+}
+#toast.show { opacity: 1; }
+
+/* ═══════════════════════════════════════════════
+   SCREEN: TOURNAMENT DETAILS
+═══════════════════════════════════════════════ */
+.td-hero {
+  position: relative; border-radius: 22px; overflow: hidden;
+  margin-bottom: 20px; padding: 32px 28px 28px;
+  border: 1px solid var(--border2);
+}
+.td-hero-orb {
+  position: absolute; right: -60px; top: -60px;
+  width: 280px; height: 280px; border-radius: 50%;
+  filter: blur(60px); opacity: 0.2; pointer-events: none;
+}
+.td-hero-orb2 {
+  position: absolute; left: -40px; bottom: -60px;
+  width: 200px; height: 200px; border-radius: 50%;
+  filter: blur(50px); opacity: 0.12; pointer-events: none;
+}
+.td-hero-grid {
+  position: absolute; inset: 0; pointer-events: none;
+  background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+.td-hero-content { position: relative; z-index: 1; }
+
+.td-back-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 14px; border-radius: 8px;
+  background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1);
+  color: var(--muted); font-family: 'Rajdhani', sans-serif;
+  font-weight: 600; font-size: 0.78rem; cursor: pointer;
+  transition: all 0.15s; margin-bottom: 20px;
+}
+.td-back-btn:hover { background: rgba(255,255,255,0.12); color: white; }
+
+.td-hero-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; }
+.td-icon-wrap {
+  width: 64px; height: 64px; border-radius: 18px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2rem; flex-shrink: 0;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+}
+.td-status-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
+.td-title {
+  font-family: 'Rajdhani', sans-serif; font-weight: 700;
+  font-size: 2rem; color: white; letter-spacing: 0.02em; line-height: 1.1; margin-bottom: 6px;
+}
+.td-subtitle { font-size: 0.83rem; color: var(--muted); }
+.td-participate-hero { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 24px; padding-top: 20px; border-top: 1px solid rgba(99,102,241,0.15); }
+
+.td-quick-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
+.td-qs-card {
+  background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+  padding: 14px 12px; text-align: center; transition: all 0.18s;
+}
+.td-qs-card:hover { border-color: var(--border2); transform: translateY(-1px); }
+.td-qs-icon { font-size: 1.25rem; margin-bottom: 5px; }
+.td-qs-val { font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 1.15rem; color: white; margin-bottom: 2px; }
+.td-qs-label { font-size: 0.62rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.07em; }
+
+.td-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+.td-grid-full { margin-bottom: 14px; }
+
+.td-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 16px; padding: 20px; height: 100%;
+}
+.td-card-title {
+  font-family: 'Rajdhani', sans-serif; font-weight: 700;
+  font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 14px;
+  display: flex; align-items: center; gap: 6px;
+}
+.td-info-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 9px 0; border-bottom: 1px solid rgba(99,102,241,0.08);
+  font-size: 0.82rem;
+}
+.td-info-row:last-child { border-bottom: none; padding-bottom: 0; }
+.td-info-label { color: var(--muted); }
+.td-info-val { font-family: 'Rajdhani', sans-serif; font-weight: 700; color: white; }
+
+.td-reward-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 14px; border-radius: 10px; margin-bottom: 7px; border: 1px solid;
+}
+.td-reward-row:last-child { margin-bottom: 0; }
+.td-reward-place { display: flex; align-items: center; gap: 8px; font-size: 0.84rem; font-weight: 600; }
+.td-reward-amount { font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; gap: 4px; }
+
+.td-rating-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 14px; border-radius: 11px; margin-bottom: 8px; border: 1px solid;
+}
+.td-rating-row:last-child { margin-bottom: 0; }
+.td-rating-scenario { font-size: 0.82rem; }
+.td-rating-val { font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 1.05rem; }
+
+.td-lb-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 11px 0; border-bottom: 1px solid rgba(99,102,241,0.08);
+}
+.td-lb-row:last-child { border-bottom: none; }
+.td-lb-rank {
+  width: 28px; height: 28px; border-radius: 8px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 0.78rem; color: white;
+}
+.td-lb-user { flex: 1; min-width: 0; }
+.td-lb-name { font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 0.88rem; color: white; }
+.td-lb-sub { font-size: 0.68rem; color: var(--muted); }
+.td-lb-score { font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 1rem; }
+.td-lb-score-bar { flex: 1; margin-left: 8px; max-width: 70px; }
+
+.td-rule-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 9px 0; border-bottom: 1px solid rgba(99,102,241,0.07);
+  font-size: 0.83rem; color: var(--text); line-height: 1.45;
+}
+.td-rule-item:last-child { border-bottom: none; }
+.td-rule-dot {
+  width: 20px; height: 20px; border-radius: 6px; flex-shrink: 0;
+  background: rgba(99,102,241,0.18); color: var(--p2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.65rem; margin-top: 2px;
+}
+
+.td-faq-item { border-bottom: 1px solid rgba(99,102,241,0.1); }
+.td-faq-item:last-child { border-bottom: none; }
+.td-faq-q {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 13px 0; cursor: pointer; font-weight: 600; font-size: 0.84rem;
+  color: var(--text); transition: color 0.15s; gap: 10px; user-select: none;
+}
+.td-faq-q:hover { color: white; }
+.td-faq-arrow { font-size: 0.6rem; color: var(--muted); flex-shrink: 0; transition: transform 0.22s; display: inline-block; }
+.td-faq-item.open .td-faq-arrow { transform: rotate(180deg); color: var(--p2); }
+.td-faq-a {
+  font-size: 0.8rem; color: var(--muted); line-height: 1.65;
+  max-height: 0; overflow: hidden; transition: max-height 0.28s ease, padding-bottom 0.2s;
+  padding-bottom: 0;
+}
+.td-faq-item.open .td-faq-a { max-height: 200px; padding-bottom: 13px; }
+
+.td-stat-bar-row { margin-bottom: 13px; }
+.td-stat-bar-row:last-child { margin-bottom: 0; }
+.td-stat-bar-top { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 0.78rem; }
+.td-stat-bar-label { color: var(--muted); }
+.td-stat-bar-val { font-family: 'Rajdhani', sans-serif; font-weight: 700; }
+
+#td-sticky-btn {
+  display: none; position: fixed;
+  bottom: 0; left: 0; right: 0; z-index: 60;
+  padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+  background: rgba(7,11,20,0.96); backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border);
+}
+
+/* ── MODAL ── */
+#modal-overlay {
+  display: none; position: fixed; inset: 0; z-index: 100;
+  background: rgba(0,0,0,0.72); backdrop-filter: blur(10px);
+  align-items: center; justify-content: center; padding: 20px;
+}
+#modal-overlay.show { display: flex; }
+.modal-box {
+  background: #0c1022; border: 1px solid var(--border2); border-radius: 22px;
+  padding: 32px 28px; max-width: 420px; width: 100%;
+  position: relative; overflow: hidden;
+  box-shadow: 0 28px 80px rgba(0,0,0,0.65), 0 0 0 1px rgba(99,102,241,0.08);
+  animation: modalIn 0.26s cubic-bezier(0.34,1.5,0.64,1);
+}
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(0.88) translateY(24px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+.modal-accent-line { position: absolute; top: 0; left: 0; right: 0; height: 2px; }
+.modal-icon { font-size: 2.8rem; text-align: center; margin-bottom: 8px; }
+.modal-title {
+  font-family: 'Rajdhani', sans-serif; font-weight: 700;
+  font-size: 1.45rem; color: white; text-align: center; letter-spacing: 0.03em; margin-bottom: 3px;
+}
+.modal-sub { font-size: 0.8rem; color: var(--muted); text-align: center; margin-bottom: 22px; }
+.modal-info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; margin-bottom: 16px; }
+.modal-info-cell {
+  background: rgba(99,102,241,0.07); border: 1px solid var(--border);
+  border-radius: 12px; padding: 12px 10px; text-align: center;
+}
+.modal-info-val { font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 1.05rem; color: white; margin-bottom: 2px; }
+.modal-info-label { font-size: 0.66rem; color: var(--muted); }
+.modal-warn {
+  display: flex; align-items: flex-start; gap: 9px; padding: 11px 14px;
+  border-radius: 10px; margin-bottom: 22px;
+  background: rgba(245,158,11,0.07); border: 1px solid rgba(245,158,11,0.25);
+  font-size: 0.78rem; color: #fcd34d; line-height: 1.5;
+}
+.modal-btns { display: flex; gap: 10px; }
+
+/* ═══════════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  #sidebar { display: none; }
+  #main { margin-left: 0; }
+  #bottom-nav { display: block; }
+  .screen { padding: 16px 14px 80px; }
+  .t-grid { grid-template-columns: 1fr; }
+  .q-options { grid-template-columns: 1fr; }
+  .podium { gap: 8px; }
+  .podium-card { padding: 12px 8px; }
+  .lb-head, .lb-row { grid-template-columns: 40px 1fr 80px; }
+  .lb-head :nth-child(4), .lb-row :nth-child(4) { display: none; }
+  .stats-grid { grid-template-columns: repeat(2,1fr); }
+  .result-stats { grid-template-columns: repeat(3,1fr); }
+  .result-place { font-size: 3rem; }
+  .td-grid { grid-template-columns: 1fr; }
+  .td-quick-stats { grid-template-columns: repeat(2,1fr); }
+  .td-title { font-size: 1.55rem; }
+  .td-hero { padding: 22px 18px 20px; }
+  #td-sticky-btn { display: block; }
+  .td-participate-hero { display: none; }
+  .screen#screen-details { padding-bottom: 100px; }
+  .modal-box { padding: 24px 18px; }
+  .modal-info-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 480px) {
+  .page-title { font-size: 1.4rem; }
+  .header-row { flex-direction: column; gap: 8px; }
+}
+</style>
+</head>
+<body>
+
+<div id="app">
+  <!-- SIDEBAR -->
+  <aside id="sidebar">
+    <div class="logo">
+      <div class="logo-icon">⚡</div>
+      <div>
+        <div class="logo-text-top">BILIM</div>
+        <div class="logo-text-bottom">JARYS</div>
+      </div>
+    </div>
+    <div class="sidebar-divider"></div>
+    <nav class="nav-list">
+      <button class="nav-btn active" onclick="navigate('tournaments')">
+        <span class="nav-icon">🏆</span> Турниры
+        <span class="nav-badge" id="live-badge">3</span>
+      </button>
+      <button class="nav-btn" onclick="navigate('leaderboard')">
+        <span class="nav-icon">📊</span> Лидерборд
+      </button>
+      <button class="nav-btn" onclick="navigate('profile')">
+        <span class="nav-icon">👤</span> Профиль
+      </button>
+      <button class="nav-btn" onclick="navigate('shop')">
+        <span class="nav-icon">🛍️</span> Магазин
+      </button>
+    </nav>
+    <div class="sidebar-user" onclick="navigate('profile')">
+      <div class="sidebar-avatar" id="sb-avatar">🦊</div>
+      <div>
+        <div class="sidebar-user-name" id="sb-name">astana_fox</div>
+        <div class="sidebar-user-rating" id="sb-rating">⭐ 1847</div>
+      </div>
+      <div class="sidebar-coins" id="sb-coins">🪙 2340</div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main id="main">
+
+    <!-- SCREEN: TOURNAMENTS -->
+    <section id="screen-tournaments" class="screen active">
+      <div class="header-row">
+        <div>
+          <div class="page-eyebrow">ДОБРО ПОЖАЛОВАТЬ</div>
+          <h1 class="page-title">
+            <span id="greeting-name">Алибек</span>
+            <span style="font-size:1.4rem;margin-left:6px">🦊</span>
+          </h1>
+        </div>
+        <div class="stat-pills">
+          <div class="stat-pill stat-pill-rating">⭐ <span id="hdr-rating">1847</span></div>
+          <div class="stat-pill stat-pill-coins">🪙 <span id="hdr-coins">2,340</span></div>
+        </div>
+      </div>
+
+      <!-- Daily -->
+      <div class="daily-card">
+        <div class="daily-title">🔥 Ежедневное задание
+          <span class="badge badge-gold" style="margin-left:auto">STREAK 7</span>
+        </div>
+        <div class="daily-desc">Выполни 3 задания · Награда <b style="color:var(--gold)">+50 монет</b></div>
+        <div class="daily-progress-row">
+          <div class="pbar-track" style="flex:1"><div class="pbar-fill gold" id="daily-bar" style="width:33%"></div></div>
+          <div class="daily-progress-label" id="daily-label">1 / 3</div>
+        </div>
+        <button class="btn btn-gold btn-sm" onclick="startDaily()">⚡ Start Challenge</button>
+      </div>
+
+      <!-- Active tournaments -->
+      <div class="section-label"><span class="dot-live"></span>Активные турниры <span class="badge badge-green" style="margin-left:4px">3 LIVE</span></div>
+      <div class="t-grid" id="active-tournaments"></div>
+
+      <!-- Upcoming -->
+      <div class="section-label" style="margin-top:8px">🕐 Предстоящие</div>
+      <div class="upcoming-list" id="upcoming-tournaments"></div>
+    </section>
+
+    <!-- SCREEN: TOURNAMENT DETAILS -->
+    <section id="screen-details" class="screen">
+      <div id="td-content"></div>
+    </section>
+
+    <!-- SCREEN: TOURNAMENT QUIZ -->
+    <section id="screen-quiz" class="screen">
+      <div class="quiz-header">
+        <div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <button class="btn btn-ghost btn-sm" onclick="navigate('tournaments')">← Назад</button>
+            <div class="quiz-title-name" id="quiz-title">Logic Battle #21</div>
+          </div>
+          <div style="font-size:0.73rem;color:var(--muted);margin-top:4px">Вопрос <span id="q-current">1</span> из <span id="q-total">10</span></div>
+        </div>
+        <div class="timer-chip" id="timer-chip">⏱ <span id="timer-display">15:00</span></div>
+      </div>
+
+      <div class="pbar-track" style="margin-bottom:18px">
+        <div class="pbar-fill" id="quiz-progress" style="width:10%"></div>
+      </div>
+
+      <div class="q-dots" id="q-dots"></div>
+
+      <div class="q-card">
+        <div class="q-num">ВОПРОС <span id="q-num-label">01</span> · <span id="q-pts-label">10 очков</span></div>
+        <div class="q-text" id="q-text">Загрузка...</div>
+        <div class="q-options" id="q-options"></div>
+      </div>
+
+      <div class="feedback-bar" id="feedback-bar"></div>
+
+      <div class="q-nav">
+        <button class="btn btn-ghost" onclick="prevQ()" id="btn-prev">← Previous</button>
+        <button class="btn btn-primary" onclick="nextQ()" id="btn-next" style="flex:1">Next →</button>
+        <button class="btn btn-green" onclick="finishTournament()" id="btn-finish" style="display:none">✓ Finish</button>
+      </div>
+    </section>
+
+    <!-- SCREEN: RESULTS -->
+    <section id="screen-results" class="screen">
+      <div class="result-screen">
+        <div class="result-trophy" id="result-trophy">🏅</div>
+        <div class="result-eyebrow">ТВОЙ РЕЗУЛЬТАТ</div>
+        <div class="result-place" id="result-place">#12</div>
+        <div class="result-total" id="result-total">из 143 участников</div>
+
+        <div class="result-stats">
+          <div class="result-stat">
+            <div class="result-stat-val" style="color:var(--p2)" id="res-score">0</div>
+            <div class="result-stat-label">Очков</div>
+          </div>
+          <div class="result-stat">
+            <div class="result-stat-val" style="color:var(--green)" id="res-acc">0%</div>
+            <div class="result-stat-label">Точность</div>
+          </div>
+          <div class="result-stat">
+            <div class="result-stat-val" style="color:var(--gold)" id="res-correct">0/0</div>
+            <div class="result-stat-label">Ответов</div>
+          </div>
+        </div>
+
+        <div class="result-rewards">
+          <div class="reward-row reward-row-gold">
+            <div class="reward-label">🪙 Bilim Coins заработано</div>
+            <div class="reward-val" style="color:var(--gold)" id="res-coins">+0</div>
+          </div>
+          <div class="reward-row" id="res-rating-row">
+            <div class="reward-label">⭐ Изменение рейтинга</div>
+            <div class="reward-val" id="res-rating">+0</div>
+          </div>
+        </div>
+
+        <div style="max-width:360px;margin:0 auto">
+          <div class="card" style="margin-bottom:12px;text-align:left">
+            <div style="font-size:0.72rem;color:var(--muted);font-family:Rajdhani;letter-spacing:0.08em;margin-bottom:4px">НОВЫЙ РЕЙТИНГ</div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-family:Rajdhani;font-weight:700;font-size:2rem;color:var(--p2)" id="new-rating">1847</span>
+              <span id="new-rating-change" style="font-family:Rajdhani;font-weight:700;font-size:1rem"></span>
+            </div>
+          </div>
+          <button class="btn btn-primary btn-full btn-lg" onclick="navigate('tournaments')">Играть снова</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCREEN: LEADERBOARD -->
+    <section id="screen-leaderboard" class="screen">
+      <div class="header-row">
+        <div>
+          <div class="page-eyebrow">СОРЕВНОВАНИЕ</div>
+          <h1 class="page-title">🏆 Лидерборд</h1>
+        </div>
+      </div>
+
+      <div class="lb-filters">
+        <button class="lb-filter active" onclick="setLbFilter(this,'all')">🌍 Казахстан</button>
+        <button class="lb-filter" onclick="setLbFilter(this,'city')">🏙️ Город</button>
+        <button class="lb-filter" onclick="setLbFilter(this,'school')">🎓 Школа</button>
+      </div>
+
+      <div class="podium" id="podium"></div>
+
+      <div class="card" style="margin-bottom:12px;padding:10px 16px;display:flex;align-items:center;gap:10px" id="my-position-row">
+        <span style="font-family:Rajdhani;font-weight:700;font-size:0.82rem;color:var(--p2)">Ваша позиция:</span>
+        <span id="my-position-badge" class="badge badge-purple">#12</span>
+        <span style="font-size:0.78rem;color:var(--muted)">из 12 000+ игроков</span>
+      </div>
+
+      <div class="lb-table">
+        <div class="lb-head">
+          <div>#</div><div>Игрок</div><div>Рейтинг</div><div>Δ</div>
+        </div>
+        <div id="lb-rows"></div>
+      </div>
+    </section>
+
+    <!-- SCREEN: PROFILE + SHOP -->
+    <section id="screen-profile" class="screen">
+      <div class="header-row">
+        <div>
+          <div class="page-eyebrow">МОЙ АККАУНТ</div>
+          <h1 class="page-title">Профиль</h1>
+        </div>
+        <div class="stat-pill stat-pill-coins">🪙 <span id="profile-coins-display">2,340</span></div>
+      </div>
+
+      <div class="profile-hero">
+        <div class="profile-hero-inner">
+          <div class="profile-av-wrap">
+            <div class="profile-av" id="profile-av">🦊</div>
+            <div class="profile-lv" id="profile-lv">23</div>
+          </div>
+          <div>
+            <div class="profile-name" id="profile-name">Алибек К.</div>
+            <div class="profile-handle" id="profile-handle">@astana_fox</div>
+            <div class="profile-title-badge">🧠 Logic Master</div>
+            <div class="profile-meta">
+              <span>⭐ <span class="profile-meta-val" id="profile-rating">1847</span> рейтинг</span>
+              <span>🔥 <span class="profile-meta-val">7</span> дней</span>
+              <span style="color:var(--muted)">Астана · Лицей №7</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('stats',this)">📊 Статистика</button>
+        <button class="tab-btn" onclick="switchTab('achievements',this)">🏆 Достижения</button>
+        <button class="tab-btn" onclick="switchTab('shop',this)">🛍️ Магазин</button>
+      </div>
+
+      <!-- Tab: Stats -->
+      <div id="tab-stats">
+        <div class="stats-grid" id="stats-grid"></div>
+        <div class="card">
+          <div style="font-family:Rajdhani;font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:14px">Прогресс</div>
+          <div id="stats-bars"></div>
+        </div>
+      </div>
+
+      <!-- Tab: Achievements -->
+      <div id="tab-achievements" style="display:none">
+        <div class="ach-grid" id="ach-grid"></div>
+      </div>
+
+      <!-- Tab: Shop -->
+      <div id="tab-shop" style="display:none">
+        <div class="shop-cat-filter" id="shop-filters"></div>
+        <div class="shop-grid" id="shop-grid"></div>
+      </div>
+    </section>
+
+    <!-- SCREEN: SHOP (standalone nav) -->
+    <section id="screen-shop" class="screen">
+      <div class="header-row">
+        <div>
+          <div class="page-eyebrow">МАГАЗИН</div>
+          <h1 class="page-title">🛍️ Bilim Store</h1>
+        </div>
+        <div class="stat-pill stat-pill-coins">🪙 <span id="shop-coins-display">2,340</span></div>
+      </div>
+      <div class="shop-cat-filter" id="shop-filters2"></div>
+      <div class="shop-grid" id="shop-grid2"></div>
+    </section>
+
+  </main>
+
+  <!-- BOTTOM NAV (mobile) -->
+  <nav id="bottom-nav">
+    <div class="bn-grid">
+      <button class="bn-btn active" onclick="navigate('tournaments')">
+        <span class="bn-icon">🏆</span>Турниры
+      </button>
+      <button class="bn-btn" onclick="navigate('leaderboard')">
+        <span class="bn-icon">📊</span>Рейтинг
+      </button>
+      <button class="bn-btn" onclick="navigate('profile')">
+        <span class="bn-icon">👤</span>Профиль
+      </button>
+      <button class="bn-btn" onclick="navigate('shop')">
+        <span class="bn-icon">🛍️</span>Магазин
+      </button>
+      <button class="bn-btn" onclick="navigate('results')" id="bn-results" style="display:none">
+        <span class="bn-icon">🎯</span>Итоги
+      </button>
+    </div>
+  </nav>
+
+  <!-- Toast -->
+  <div id="toast"></div>
+
+  <!-- STICKY PARTICIPATE (mobile only, shown on details screen) -->
+  <div id="td-sticky-btn">
+    <button class="btn btn-primary btn-full btn-lg" id="td-sticky-participate-btn" onclick="openStartModal()">
+      ⚡ Participate Now
+    </button>
+  </div>
+
+  <!-- MODAL: TOURNAMENT START -->
+  <div id="modal-overlay" onclick="handleOverlayClick(event)">
+    <div class="modal-box" id="modal-box">
+      <div class="modal-accent-line" id="modal-accent"></div>
+      <div class="modal-icon" id="modal-icon">🧠</div>
+      <div class="modal-title" id="modal-t-name">Logic Battle #21</div>
+      <div class="modal-sub">Прочитай условия перед стартом</div>
+      <div class="modal-info-grid">
+        <div class="modal-info-cell">
+          <div class="modal-info-val" id="modal-questions">10</div>
+          <div class="modal-info-label">Вопросов</div>
+        </div>
+        <div class="modal-info-cell">
+          <div class="modal-info-val" id="modal-duration">15 мин</div>
+          <div class="modal-info-label">Длительность</div>
+        </div>
+        <div class="modal-info-cell">
+          <div class="modal-info-val" id="modal-prize">🪙 500</div>
+          <div class="modal-info-label">Reward Pool</div>
+        </div>
+        <div class="modal-info-cell">
+          <div class="modal-info-val" id="modal-maxscore">100</div>
+          <div class="modal-info-label">Max Score</div>
+        </div>
+      </div>
+      <div class="modal-warn">
+        <span style="font-size:1.1rem;flex-shrink:0">⚠️</span>
+        <span>У тебя только <b>одна попытка</b>. Таймер нельзя поставить на паузу. После отправки ответ изменить невозможно.</span>
+      </div>
+      <div class="modal-btns">
+        <button class="btn btn-ghost" style="flex:1" onclick="closeModal()">Отмена</button>
+        <button class="btn btn-primary" style="flex:2" onclick="confirmStartTournament()" id="modal-start-btn">
+          ⚡ Start Tournament
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════
+   STATE
+═══════════════════════════════════════════════ */
+const state = {
+  user: {
+    displayName: 'Алибек К.',
+    username: 'astana_fox',
+    avatar: '🦊',
+    rating: 1847,
+    level: 23,
+    coins: 2340,
+    streak: 7,
+    city: 'Астана',
+    school: 'Лицей №7',
+    title: 'Logic Master',
+    tournamentsPlayed: 94,
+    wins: 18,
+    top10: 41,
+    top100: 76,
+  },
+  currentTournament: null,
+  currentQuestion: 0,
+  answers: [],
+  quizTimer: null,
+  quizSeconds: 900,
+  ownedItems: ['av-1', 'fr-1', 'ti-1'],
+  dailyCompleted: 1,
+};
+
+/* ═══════════════════════════════════════════════
+   MOCK DATA
+═══════════════════════════════════════════════ */
+const tournaments = [
+  {
+    id: 't1', name: 'Logic Battle #21', icon: '🧠', color: '#6366f1',
+    subject: 'Logic', difficulty: 'Hard', participants: 142, max: 200,
+    prize: 500, questions: 10, duration: 20,
+    endsIn: '23ч 14м', status: 'active',
+  },
+  {
+    id: 't2', name: 'Math Sprint #8', icon: '📐', color: '#3b82f6',
+    subject: 'Math', difficulty: 'Medium', participants: 89, max: 150,
+    prize: 300, questions: 10, duration: 15,
+    endsIn: '2ч 08м', status: 'active',
+  },
+  {
+    id: 't3', name: 'English Challenge #12', icon: '📚', color: '#8b5cf6',
+    subject: 'English', difficulty: 'Medium', participants: 210, max: 300,
+    prize: 400, questions: 10, duration: 25,
+    endsIn: '47ч 52м', status: 'active',
+  },
+];
+
+const upcomingTournaments = [
+  { name: 'Science Quiz #5', icon: '🔬', date: 'Завтра, 18:00', prize: 600, color: '#10b981' },
+  { name: 'History Masters #3', icon: '📜', date: 'Пт, 15:00', prize: 250, color: '#f59e0b' },
+  { name: 'Logic Battle #22', icon: '🧠', date: 'Сб, 12:00', prize: 500, color: '#6366f1' },
+];
+
+const questions = [
+  { text: 'Сколько будет 12 × 8?', opts: ['86', '94', '96', '102'], correct: 2, pts: 10 },
+  { text: 'Если x + 15 = 32, чему равно x?', opts: ['14', '17', '18', '21'], correct: 1, pts: 10 },
+  { text: 'Площадь квадрата со стороной 7 см?', opts: ['28 см²', '42 см²', '49 см²', '56 см²'], correct: 2, pts: 15 },
+  { text: 'Чему равно 144 ÷ 12?', opts: ['10', '11', '12', '13'], correct: 2, pts: 10 },
+  { text: '15% от 200 — это?', opts: ['25', '30', '35', '40'], correct: 1, pts: 15 },
+  { text: 'Следующее простое число после 17?', opts: ['18', '19', '20', '21'], correct: 1, pts: 10 },
+  { text: 'Корень из 169 = ?', opts: ['11', '12', '13', '14'], correct: 2, pts: 15 },
+  { text: '3⁴ = ?', opts: ['12', '64', '81', '27'], correct: 2, pts: 20 },
+  { text: 'Периметр прямоугольника 6×4?', opts: ['20', '24', '28', '10'], correct: 0, pts: 10 },
+  { text: '0.5 × 0.5 = ?', opts: ['1', '0.25', '0.5', '0.75'], correct: 1, pts: 10 },
+];
+
+const leaderboardData = [
+  { rank:1, username:'quantum_kz', display:'Санжар М.', avatar:'⚡', rating:2841, level:45, title:'Grand Master', change:3, isMe:false },
+  { rank:2, username:'chess_queen', display:'Аяна Б.', avatar:'♛', rating:2710, level:42, title:'Queen of Logic', change:-1, isMe:false },
+  { rank:3, username:'astro_boy', display:'Дамир Т.', avatar:'🚀', rating:2598, level:39, title:'Science Wizard', change:2, isMe:false },
+  { rank:4, username:'wolf_almaty', display:'Нурлан К.', avatar:'🐺', rating:2441, level:36, title:'Math Titan', change:0, isMe:false },
+  { rank:5, username:'starfire_kz', display:'Зарина А.', avatar:'⭐', rating:2389, level:35, title:'Star Pupil', change:-2, isMe:false },
+  { rank:6, username:'logic_eagle', display:'Ерлан М.', avatar:'🦅', rating:2301, level:34, title:'Eagle Eye', change:1, isMe:false },
+  { rank:7, username:'phoenix_rise', display:'Камила Д.', avatar:'🔥', rating:2244, level:33, title:'Phoenix', change:4, isMe:false },
+  { rank:8, username:'code_master', display:'Азамат Н.', avatar:'💻', rating:2187, level:31, title:'Code Ninja', change:-3, isMe:false },
+  { rank:9, username:'math_king99', display:'Руслан В.', avatar:'👑', rating:2134, level:30, title:'King of Math', change:0, isMe:false },
+  { rank:10, username:'night_owl', display:'Айгерим С.', avatar:'🦉', rating:2089, level:29, title:'Night Owl', change:2, isMe:false },
+  { rank:11, username:'dragon_kz', display:'Бекзат Ж.', avatar:'🐉', rating:2012, level:28, title:'Dragon', change:-1, isMe:false },
+  { rank:12, username:'astana_fox', display:'Алибек К.', avatar:'🦊', rating:1847, level:23, title:'Logic Master', change:5, isMe:true },
+];
+
+const achievements = [
+  { id:'a1', emoji:'🏆', name:'First Victory', desc:'Выиграй первый турнир', unlocked:true, rarity:'common' },
+  { id:'a2', emoji:'🔥', name:'7 Day Streak', desc:'7 дней подряд в турнирах', unlocked:true, rarity:'rare' },
+  { id:'a3', emoji:'⚡', name:'Speed Demon', desc:'10 задач за 2 минуты', unlocked:true, rarity:'rare' },
+  { id:'a4', emoji:'🧠', name:'Logic Lord', desc:'Победи в 5 логических турнирах', unlocked:true, rarity:'epic' },
+  { id:'a5', emoji:'👑', name:'Season Champion', desc:'Топ-10 по итогам сезона', unlocked:false, rarity:'legendary' },
+  { id:'a6', emoji:'🌟', name:'Top 100 KZ', desc:'Войди в топ-100 Казахстана', unlocked:true, rarity:'epic' },
+  { id:'a7', emoji:'💎', name:'Diamond Player', desc:'Набери 2000+ рейтинга', unlocked:false, rarity:'legendary' },
+  { id:'a8', emoji:'🎯', name:'Perfect Score', desc:'Все ответы правильные', unlocked:true, rarity:'epic' },
+  { id:'a9', emoji:'🌍', name:'Globetrotter', desc:'10 разных категорий', unlocked:false, rarity:'rare' },
+  { id:'a10', emoji:'🚀', name:'100 Tournaments', desc:'Сыграй 100 турниров', unlocked:false, rarity:'epic' },
+  { id:'a11', emoji:'🦁', name:'Fearless', desc:'Участвуй в Expert турнире', unlocked:true, rarity:'rare' },
+  { id:'a12', emoji:'🎮', name:'Veteran', desc:'Сыграй 50 турниров', unlocked:true, rarity:'common' },
+];
+
+const shopItemsData = [
+  // Avatars
+  { id:'av-1', cat:'avatar', name:'Galaxy Fox', img:'🦊', desc:'Редкая лисица из галактики', price:500, rarity:'epic', color:'#8b5cf6' },
+  { id:'av-2', cat:'avatar', name:'Cyber Dragon', img:'🐉', desc:'Легендарный кибер-дракон', price:1200, rarity:'legendary', color:'#f59e0b' },
+  { id:'av-3', cat:'avatar', name:'Storm Eagle', img:'🦅', desc:'Орёл повелитель бурь', price:800, rarity:'epic', color:'#8b5cf6' },
+  { id:'av-4', cat:'avatar', name:'Neon Wolf', img:'🐺', desc:'Неоновый волк тени', price:600, rarity:'rare', color:'#3b82f6' },
+  // Frames
+  { id:'fr-1', cat:'frame', name:'Neon Purple', img:'🟣', desc:'Неоновая фиолетовая рамка', price:300, rarity:'rare', color:'#3b82f6' },
+  { id:'fr-2', cat:'frame', name:'Golden Crown', img:'🟡', desc:'Золотая корона чемпиона', price:1500, rarity:'legendary', color:'#f59e0b' },
+  { id:'fr-3', cat:'frame', name:'Ice Crystal', img:'🔵', desc:'Кристаллы арктического льда', price:600, rarity:'epic', color:'#8b5cf6' },
+  // Titles
+  { id:'ti-1', cat:'title', name:'Logic Master', img:'🧠', desc:'Мастер логики', price:400, rarity:'rare', color:'#3b82f6' },
+  { id:'ti-2', cat:'title', name:'Grand Wizard', img:'🧙', desc:'Великий маг знаний', price:1000, rarity:'legendary', color:'#f59e0b' },
+  { id:'ti-3', cat:'title', name:'Math Titan', img:'📐', desc:'Титан математики', price:600, rarity:'epic', color:'#8b5cf6' },
+  { id:'ti-4', cat:'title', name:'Speed Runner', img:'⚡', desc:'Скоростной игрок', price:250, rarity:'common', color:'#94a3b8' },
+];
+
+/* ═══════════════════════════════════════════════
+   NAVIGATION
+═══════════════════════════════════════════════ */
+const screenMap = {
+  tournaments: 'screen-tournaments',
+  details: 'screen-details',
+  quiz: 'screen-quiz',
+  results: 'screen-results',
+  leaderboard: 'screen-leaderboard',
+  profile: 'screen-profile',
+  shop: 'screen-shop',
+};
+
+let currentScreen = 'tournaments';
+
+function navigate(page) {
+  // Stop quiz timer if leaving quiz
+  if (currentScreen === 'quiz' && page !== 'quiz') {
+    stopTimer();
+  }
+
+  // Hide all
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  // Show target
+  const targetId = screenMap[page] || 'screen-tournaments';
+  const el = document.getElementById(targetId);
+  if (el) el.classList.add('active');
+  currentScreen = page;
+
+  // Update sidebar nav
+  document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+  const navMap = { tournaments:0, leaderboard:1, profile:2, shop:3 };
+  const navBtns = document.querySelectorAll('.nav-btn');
+  if (navMap[page] !== undefined) navBtns[navMap[page]]?.classList.add('active');
+
+  // Update bottom nav
+  document.querySelectorAll('.bn-btn').forEach(btn => btn.classList.remove('active'));
+  const bnMap = { tournaments:0, leaderboard:1, profile:2, shop:3, results:4 };
+  const bnBtns = document.querySelectorAll('.bn-btn');
+  if (bnMap[page] !== undefined) bnBtns[bnMap[page]]?.classList.add('active');
+
+  // Refresh data
+  if (page === 'leaderboard') renderLeaderboard();
+  if (page === 'profile') renderProfile();
+  if (page === 'shop') renderShopPage();
+
+  // Sticky participate button — only on details
+  const stickyBtn = document.getElementById('td-sticky-btn');
+  if (stickyBtn) stickyBtn.style.display = page === 'details' ? 'block' : 'none';
+
+  updateHeaderStats();
+  window.scrollTo(0, 0);
+}
+
+/* ═══════════════════════════════════════════════
+   UPDATE UI FROM STATE
+═══════════════════════════════════════════════ */
+function updateHeaderStats() {
+  const { rating, coins, username, displayName } = state.user;
+  const fmt = n => n.toLocaleString('ru-RU');
+
+  // Sidebar
+  _set('sb-name', username);
+  _set('sb-rating', '⭐ ' + rating);
+  _set('sb-coins', '🪙 ' + fmt(coins));
+
+  // Tournament header
+  _set('hdr-rating', rating);
+  _set('hdr-coins', fmt(coins));
+  _set('greeting-name', displayName.split(' ')[0]);
+
+  // Profile header
+  _set('profile-coins-display', fmt(coins));
+  _set('shop-coins-display', fmt(coins));
+}
+
+function _set(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = val;
+}
+
+/* ═══════════════════════════════════════════════
+   TOURNAMENTS RENDER
+═══════════════════════════════════════════════ */
+function renderTournaments() {
+  const diffColors = { Easy:'#10b981', Medium:'#3b82f6', Hard:'#f59e0b', Expert:'#ef4444' };
+
+  const activeEl = document.getElementById('active-tournaments');
+  activeEl.innerHTML = tournaments.map(t => {
+    const pct = Math.round((t.participants / t.max) * 100);
+    const dc = diffColors[t.difficulty] || '#6366f1';
+    return `
+    <div class="t-card" style="border-color:${t.color}25" onmouseenter="this.style.borderColor='${t.color}55'" onmouseleave="this.style.borderColor='${t.color}25'">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,${t.color},transparent);border-radius:16px 16px 0 0"></div>
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px">
+        <div class="t-card-icon" style="background:${t.color}18;border:1px solid ${t.color}35">${t.icon}</div>
+        <span class="prize-chip">🪙 ${t.prize}</span>
+      </div>
+      <div class="t-card-name">${t.name}</div>
+      <div class="t-card-meta">
+        <span>👥 ${t.participants}/${t.max}</span>
+        <span>⏱ ${t.endsIn}</span>
+        <span>${t.questions} вопр.</span>
+      </div>
+      <span style="display:inline-block;padding:2px 8px;border-radius:999px;font-family:Rajdhani;font-size:0.68rem;font-weight:700;background:${dc}18;color:${dc};border:1px solid ${dc}30;margin-bottom:10px">${t.difficulty}</span>
+      <div class="pbar-track" style="margin-bottom:12px"><div class="pbar-fill" style="width:${pct}%;background:linear-gradient(90deg,${t.color},${t.color}99)"></div></div>
+      <button class="btn btn-primary btn-full btn-sm" onclick="joinTournament('${t.id}')" style="background:linear-gradient(135deg,${t.color},${t.color}cc);border-color:${t.color}40">Join Tournament</button>
+    </div>`;
+  }).join('');
+
+  const upEl = document.getElementById('upcoming-tournaments');
+  upEl.innerHTML = upcomingTournaments.map(t => `
+    <div class="upcoming-item">
+      <div class="upcoming-icon">${t.icon}</div>
+      <div>
+        <div class="upcoming-name">${t.name}</div>
+        <div class="upcoming-date">📅 ${t.date}</div>
+      </div>
+      <div class="upcoming-prize">
+        <span class="prize-chip">🪙 ${t.prize}</span>
+      </div>
+      <button class="btn btn-ghost btn-sm">Notify</button>
+    </div>`).join('');
+}
+
+/* ═══════════════════════════════════════════════
+   QUIZ LOGIC
+═══════════════════════════════════════════════ */
+function joinTournament(id) {
+  // Now navigates to the details page first
+  const t = tournaments.find(x => x.id === id);
+  if (!t) return;
+  state.currentTournament = t;
+  renderTournamentDetails(t);
+  navigate('details');
+}
+
+function startQuizDirectly(t) {
+  state.currentTournament = t;
+  state.currentQuestion = 0;
+  state.answers = new Array(t.questions).fill(null);
+  state.quizSeconds = t.duration * 60;
+
+  _set('quiz-title', t.name);
+  _set('q-total', t.questions);
+  navigate('quiz');
+  renderQuestion();
+  startTimer();
+}
+
+/* ═══════════════════════════════════════════════
+   TOURNAMENT DETAILS
+═══════════════════════════════════════════════ */
+const tdLeaderboardMock = [
+  { rank:1, username:'quantum_kz', avatar:'⚡', score:98, level:45 },
+  { rank:2, username:'chess_queen', avatar:'♛', score:95, level:42 },
+  { rank:3, username:'astro_boy', avatar:'🚀', score:92, level:39 },
+  { rank:4, username:'wolf_almaty', avatar:'🐺', score:89, level:36 },
+  { rank:5, username:'starfire_kz', avatar:'⭐', score:86, level:35 },
+];
+
+function renderTournamentDetails(t) {
+  const maxScore = t.questions * 10;
+  const diffColors = { Easy:'#10b981', Medium:'#3b82f6', Hard:'#f59e0b', Expert:'#ef4444' };
+  const dc = diffColors[t.difficulty] || '#6366f1';
+
+  // Leaderboard preview rows
+  const lbRows = tdLeaderboardMock.map((p, i) => {
+    const rankBg = i===0 ? 'linear-gradient(135deg,#f59e0b,#d97706)'
+                 : i===1 ? 'linear-gradient(135deg,#94a3b8,#64748b)'
+                 : i===2 ? 'linear-gradient(135deg,#b45309,#92400e)'
+                 : 'rgba(99,102,241,0.18)';
+    const scorePct = Math.round(p.score / 100 * 100);
+    const scoreColor = i===0 ? '#f59e0b' : i===1 ? '#94a3b8' : i===2 ? '#b45309' : t.color;
+    return `
+    <div class="td-lb-row">
+      <div class="td-lb-rank" style="background:${rankBg}">${p.rank}</div>
+      <div class="td-lb-user">
+        <div class="td-lb-name">${p.avatar} ${p.username}</div>
+        <div class="td-lb-sub">Lv${p.level}</div>
+      </div>
+      <div class="td-lb-score" style="color:${scoreColor}">${p.score}</div>
+      <div class="td-lb-score-bar">
+        <div class="pbar-track"><div class="pbar-fill" style="width:${scorePct}%;background:${scoreColor}"></div></div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // FAQ data
+  const faqs = [
+    { q:'Как распределяются награды?', a:'Награды начисляются автоматически сразу после завершения турнира. 1-е место получает полный приз, топ-10 — уменьшенное вознаграждение, а все участники — базовые 20 монет.' },
+    { q:'Как рассчитывается рейтинг?', a:'Рейтинг изменяется на основе твоего места в турнире, сложности турнира и количества участников. Победа в Hard-турнире с большим числом игроков даёт больше очков.' },
+    { q:'Можно ли пересдать турнир?', a:'Нет. Каждый турнир можно пройти только один раз. Это обеспечивает честную конкуренцию для всех участников.' },
+    { q:'Когда будут начислены награды?', a:'Все награды (монеты и рейтинг) начисляются мгновенно после нажатия кнопки Finish и отображаются на экране результатов.' },
+  ];
+  const faqHtml = faqs.map((f, i) => `
+    <div class="td-faq-item" id="faq-${i}">
+      <div class="td-faq-q" onclick="toggleFaq(${i})">
+        <span>${f.q}</span>
+        <span class="td-faq-arrow">▼</span>
+      </div>
+      <div class="td-faq-a">${f.a}</div>
+    </div>`).join('');
+
+  const html = `
+    <!-- HERO -->
+    <div class="td-hero" style="background:linear-gradient(135deg, ${t.color}12, rgba(13,19,36,0.95) 60%, rgba(8,11,20,0.98))">
+      <div class="td-hero-orb" style="background:${t.color}"></div>
+      <div class="td-hero-orb2" style="background:${t.color}88"></div>
+      <div class="td-hero-grid"></div>
+      <div class="td-hero-content">
+        <button class="td-back-btn" onclick="navigate('tournaments')">← Назад к турнирам</button>
+        <div class="td-hero-top">
+          <div style="display:flex;align-items:flex-start;gap:16px;flex:1;min-width:0">
+            <div class="td-icon-wrap" style="background:linear-gradient(135deg,${t.color}44,${t.color}22);border:1.5px solid ${t.color}50">${t.icon}</div>
+            <div style="min-width:0">
+              <div class="td-status-row">
+                <span class="badge badge-green" style="font-size:0.65rem">● LIVE</span>
+                <span style="display:inline-flex;align-items:center;padding:2px 8px;border-radius:999px;font-family:Rajdhani;font-size:0.66rem;font-weight:700;background:${dc}18;color:${dc};border:1px solid ${dc}30">${t.difficulty}</span>
+                <span class="badge badge-purple" style="font-size:0.65rem">${t.subject}</span>
+              </div>
+              <div class="td-title">${t.name}</div>
+              <div class="td-subtitle">👥 ${t.participants} из ${t.max} участников · ⏱ Осталось ${t.endsIn}</div>
+            </div>
+          </div>
+          <div style="flex-shrink:0">
+            <div style="text-align:right;margin-bottom:4px;font-size:0.68rem;color:var(--muted);font-family:Rajdhani;letter-spacing:0.06em">ПРИЗ</div>
+            <div style="font-family:Rajdhani;font-weight:700;font-size:2rem;color:var(--gold);line-height:1">🪙${t.prize}</div>
+          </div>
+        </div>
+
+        <!-- Participants bar -->
+        <div style="margin-bottom:6px;display:flex;justify-content:space-between;font-size:0.72rem;color:var(--muted)">
+          <span>Заполненность</span>
+          <span style="font-family:Rajdhani;font-weight:700;color:${t.color}">${Math.round(t.participants/t.max*100)}%</span>
+        </div>
+        <div class="pbar-track" style="height:7px;margin-bottom:0">
+          <div class="pbar-fill" style="width:${Math.round(t.participants/t.max*100)}%;background:linear-gradient(90deg,${t.color},${t.color}88)"></div>
+        </div>
+
+        <div class="td-participate-hero">
+          <button class="btn btn-primary btn-lg" onclick="openStartModal()"
+            style="background:linear-gradient(135deg,${t.color},${t.color}cc);border-color:${t.color}40;min-width:200px">
+            ⚡ Participate
+          </button>
+          <div style="font-size:0.78rem;color:var(--muted)">Только одна попытка · Таймер нельзя остановить</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- QUICK STATS -->
+    <div class="td-quick-stats">
+      <div class="td-qs-card">
+        <div class="td-qs-icon">📝</div>
+        <div class="td-qs-val">${t.questions}</div>
+        <div class="td-qs-label">Вопросов</div>
+      </div>
+      <div class="td-qs-card">
+        <div class="td-qs-icon">⏱</div>
+        <div class="td-qs-val">${t.duration}м</div>
+        <div class="td-qs-label">Время</div>
+      </div>
+      <div class="td-qs-card">
+        <div class="td-qs-icon">🎯</div>
+        <div class="td-qs-val">${maxScore}</div>
+        <div class="td-qs-label">Max Score</div>
+      </div>
+      <div class="td-qs-card">
+        <div class="td-qs-icon">🪙</div>
+        <div class="td-qs-val">${t.prize}</div>
+        <div class="td-qs-label">1-е место</div>
+      </div>
+    </div>
+
+    <!-- ROW 1: Info + Rewards -->
+    <div class="td-grid">
+      <!-- Tournament Info -->
+      <div class="td-card">
+        <div class="td-card-title"><span>📋</span> Информация</div>
+        <div class="td-info-row">
+          <span class="td-info-label">Тип</span>
+          <span class="td-info-val">${t.subject}</span>
+        </div>
+        <div class="td-info-row">
+          <span class="td-info-label">Сложность</span>
+          <span class="td-info-val" style="color:${dc}">${t.difficulty}</span>
+        </div>
+        <div class="td-info-row">
+          <span class="td-info-label">Вопросов</span>
+          <span class="td-info-val">${t.questions}</span>
+        </div>
+        <div class="td-info-row">
+          <span class="td-info-label">Длительность</span>
+          <span class="td-info-val">${t.duration} минут</span>
+        </div>
+        <div class="td-info-row">
+          <span class="td-info-label">Max Score</span>
+          <span class="td-info-val">${maxScore} очков</span>
+        </div>
+        <div class="td-info-row">
+          <span class="td-info-label">Награда</span>
+          <span class="td-info-val" style="color:var(--gold)">🪙 ${t.prize}</span>
+        </div>
+        <div class="td-info-row">
+          <span class="td-info-label">Статус</span>
+          <span style="display:inline-flex;align-items:center;gap:4px;font-family:Rajdhani;font-weight:700;font-size:0.82rem;color:var(--green)">
+            <span style="width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block"></span> Active
+          </span>
+        </div>
+      </div>
+
+      <!-- Rewards -->
+      <div class="td-card">
+        <div class="td-card-title"><span>🏆</span> Награды</div>
+        <div class="td-reward-row" style="background:rgba(245,158,11,0.08);border-color:rgba(245,158,11,0.3)">
+          <div class="td-reward-place"><span style="font-size:1.1rem">🥇</span> 1 место</div>
+          <div class="td-reward-amount" style="color:var(--gold)">🪙 ${t.prize}</div>
+        </div>
+        <div class="td-reward-row" style="background:rgba(148,163,184,0.06);border-color:rgba(148,163,184,0.2)">
+          <div class="td-reward-place"><span style="font-size:1.1rem">🥈</span> 2 место</div>
+          <div class="td-reward-amount" style="color:#94a3b8">🪙 ${Math.round(t.prize*0.6)}</div>
+        </div>
+        <div class="td-reward-row" style="background:rgba(180,83,9,0.06);border-color:rgba(180,83,9,0.2)">
+          <div class="td-reward-place"><span style="font-size:1.1rem">🥉</span> 3 место</div>
+          <div class="td-reward-amount" style="color:#b45309">🪙 ${Math.round(t.prize*0.4)}</div>
+        </div>
+        <div class="td-reward-row" style="background:rgba(99,102,241,0.07);border-color:rgba(99,102,241,0.18)">
+          <div class="td-reward-place"><span style="font-size:1rem">🎖️</span> Топ-10</div>
+          <div class="td-reward-amount" style="color:var(--p2)">🪙 ${Math.round(t.prize*0.2)}</div>
+        </div>
+        <div class="td-reward-row" style="background:rgba(99,102,241,0.04);border-color:rgba(99,102,241,0.1)">
+          <div class="td-reward-place" style="color:var(--muted)"><span style="font-size:1rem">✅</span> Участие</div>
+          <div class="td-reward-amount" style="color:var(--muted)">🪙 20</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROW 2: Rating + Stats -->
+    <div class="td-grid">
+      <!-- Rating Impact -->
+      <div class="td-card">
+        <div class="td-card-title"><span>⭐</span> Влияние на рейтинг</div>
+        <div class="td-rating-row" style="background:rgba(16,185,129,0.08);border-color:rgba(16,185,129,0.25)">
+          <span class="td-rating-scenario" style="color:var(--green)">🏆 Победа (1-е место)</span>
+          <span class="td-rating-val" style="color:var(--green)">+50</span>
+        </div>
+        <div class="td-rating-row" style="background:rgba(99,102,241,0.07);border-color:rgba(99,102,241,0.18)">
+          <span class="td-rating-scenario" style="color:var(--p2)">🥈 Топ-10</span>
+          <span class="td-rating-val" style="color:var(--p2)">+20</span>
+        </div>
+        <div class="td-rating-row" style="background:rgba(59,130,246,0.06);border-color:rgba(59,130,246,0.15)">
+          <span class="td-rating-scenario" style="color:#60a5fa">📊 Средний результат</span>
+          <span class="td-rating-val" style="color:#60a5fa">+10</span>
+        </div>
+        <div class="td-rating-row" style="background:rgba(245,158,11,0.06);border-color:rgba(245,158,11,0.15)">
+          <span class="td-rating-scenario" style="color:var(--gold)">😐 Слабый результат</span>
+          <span class="td-rating-val" style="color:var(--gold)">−5</span>
+        </div>
+        <div class="td-rating-row" style="background:rgba(239,68,68,0.06);border-color:rgba(239,68,68,0.15)">
+          <span class="td-rating-scenario" style="color:var(--red)">💔 Не завершён</span>
+          <span class="td-rating-val" style="color:var(--red)">−10</span>
+        </div>
+      </div>
+
+      <!-- Tournament Stats -->
+      <div class="td-card">
+        <div class="td-card-title"><span>📊</span> Статистика</div>
+        <div class="td-stat-bar-row">
+          <div class="td-stat-bar-top">
+            <span class="td-stat-bar-label">Участников</span>
+            <span class="td-stat-bar-val" style="color:${t.color}">${t.participants.toLocaleString()}</span>
+          </div>
+          <div class="pbar-track"><div class="pbar-fill" style="width:${Math.round(t.participants/t.max*100)}%;background:${t.color}"></div></div>
+        </div>
+        <div class="td-stat-bar-row">
+          <div class="td-stat-bar-top">
+            <span class="td-stat-bar-label">Средний балл</span>
+            <span class="td-stat-bar-val" style="color:var(--p2)">72 / ${maxScore}</span>
+          </div>
+          <div class="pbar-track"><div class="pbar-fill" style="width:72%;background:linear-gradient(90deg,var(--p),var(--violet))"></div></div>
+        </div>
+        <div class="td-stat-bar-row">
+          <div class="td-stat-bar-top">
+            <span class="td-stat-bar-label">Завершили</span>
+            <span class="td-stat-bar-val" style="color:var(--green)">84%</span>
+          </div>
+          <div class="pbar-track"><div class="pbar-fill green" style="width:84%"></div></div>
+        </div>
+        <div style="height:1px;background:rgba(99,102,241,0.1);margin:14px 0"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center">
+          <div>
+            <div style="font-family:Rajdhani;font-weight:700;font-size:1.1rem;color:var(--green)">84%</div>
+            <div style="font-size:0.64rem;color:var(--muted)">Завершили</div>
+          </div>
+          <div>
+            <div style="font-family:Rajdhani;font-weight:700;font-size:1.1rem;color:var(--p2)">72</div>
+            <div style="font-size:0.64rem;color:var(--muted)">Сред. балл</div>
+          </div>
+          <div>
+            <div style="font-family:Rajdhani;font-weight:700;font-size:1.1rem;color:var(--gold)">${t.participants}</div>
+            <div style="font-size:0.64rem;color:var(--muted)">Игроков</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Leaderboard Preview -->
+    <div class="td-grid-full">
+      <div class="td-card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+          <div class="td-card-title" style="margin-bottom:0"><span>📋</span> Топ-5 участников</div>
+          <button class="btn btn-ghost btn-sm" onclick="navigate('leaderboard')">Полный рейтинг →</button>
+        </div>
+        ${lbRows}
+      </div>
+    </div>
+
+    <!-- Rules + FAQ grid -->
+    <div class="td-grid">
+      <!-- Rules -->
+      <div class="td-card">
+        <div class="td-card-title"><span>📜</span> Правила</div>
+        <div class="td-rule-item">
+          <div class="td-rule-dot">1</div>
+          <span>Только <b>одна попытка</b> — повторный проход недоступен</span>
+        </div>
+        <div class="td-rule-item">
+          <div class="td-rule-dot">2</div>
+          <span>Таймер <b>нельзя остановить</b> после старта</span>
+        </div>
+        <div class="td-rule-item">
+          <div class="td-rule-dot">3</div>
+          <span>После выбора ответ <b>изменить нельзя</b></span>
+        </div>
+        <div class="td-rule-item">
+          <div class="td-rule-dot">4</div>
+          <span>Результаты рассчитываются <b>автоматически</b></span>
+        </div>
+        <div class="td-rule-item">
+          <div class="td-rule-dot">5</div>
+          <span>Награды начисляются <b>сразу после финиша</b></span>
+        </div>
+      </div>
+
+      <!-- FAQ -->
+      <div class="td-card">
+        <div class="td-card-title"><span>❓</span> FAQ</div>
+        ${faqHtml}
+      </div>
+    </div>
+
+    <!-- Bottom spacer for mobile sticky btn -->
+    <div style="height:20px"></div>
+  `;
+
+  document.getElementById('td-content').innerHTML = html;
+}
+
+function toggleFaq(i) {
+  const item = document.getElementById('faq-' + i);
+  if (!item) return;
+  item.classList.toggle('open');
+}
+
+/* ── MODAL ── */
+function openStartModal() {
+  const t = state.currentTournament;
+  if (!t) return;
+  const maxScore = t.questions * 10;
+  const diffColors = { Easy:'#10b981', Medium:'#3b82f6', Hard:'#f59e0b', Expert:'#ef4444' };
+
+  _set('modal-t-name', t.name);
+  _set('modal-icon', t.icon);
+  _set('modal-questions', t.questions);
+  _set('modal-duration', t.duration + ' мин');
+  _set('modal-prize', '🪙 ' + t.prize);
+  _set('modal-maxscore', maxScore);
+
+  const acc = document.getElementById('modal-accent');
+  if (acc) acc.style.background = `linear-gradient(90deg, transparent, ${t.color}, transparent)`;
+
+  const startBtn = document.getElementById('modal-start-btn');
+  if (startBtn) startBtn.style.background = `linear-gradient(135deg, ${t.color}, ${t.color}cc)`;
+
+  document.getElementById('modal-overlay').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('show');
+  document.body.style.overflow = '';
+}
+
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
+}
+
+function confirmStartTournament() {
+  closeModal();
+  const t = state.currentTournament;
+  startQuizDirectly(t);
+}
+
+function renderQuestion() {
+  const qi = state.currentQuestion;
+  const q = questions[qi];
+  const total = state.currentTournament.questions;
+
+  _set('q-current', qi + 1);
+  _set('q-num-label', String(qi + 1).padStart(2, '0'));
+  _set('q-pts-label', q.pts + ' очков');
+  _set('q-text', q.text);
+
+  // Progress bar
+  document.getElementById('quiz-progress').style.width = ((qi + 1) / total * 100) + '%';
+
+  // Dots
+  const dotsEl = document.getElementById('q-dots');
+  dotsEl.innerHTML = '';
+  for (let i = 0; i < total; i++) {
+    const d = document.createElement('div');
+    d.className = 'q-dot';
+    if (i === qi) d.classList.add('active');
+    else if (state.answers[i] !== null) {
+      d.classList.add(state.answers[i] === questions[i].correct ? 'answered-right' : 'answered-wrong');
+    }
+    d.onclick = () => goToQ(i);
+    dotsEl.appendChild(d);
+  }
+
+  // Options
+  const optsEl = document.getElementById('q-options');
+  optsEl.innerHTML = '';
+  const answered = state.answers[qi] !== null;
+  const letters = ['A','B','C','D'];
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'q-opt';
+    btn.innerHTML = `<span class="q-opt-letter">${letters[i]}</span>${opt}`;
+    btn.disabled = answered;
+
+    if (answered) {
+      if (i === q.correct) btn.classList.add('correct-reveal');
+      if (i === state.answers[qi] && i !== q.correct) btn.classList.add('selected-wrong');
+      if (i === state.answers[qi] && i === q.correct) btn.classList.add('selected-right');
+    }
+
+    btn.onclick = () => selectAnswer(i);
+    optsEl.appendChild(btn);
+  });
+
+  // Feedback
+  const fb = document.getElementById('feedback-bar');
+  if (answered) {
+    const isRight = state.answers[qi] === q.correct;
+    fb.textContent = isRight
+      ? `✓ Правильно! +${q.pts} очков`
+      : `✗ Неверно. Правильный ответ: ${q.opts[q.correct]}`;
+    fb.className = 'feedback-bar show ' + (isRight ? 'right' : 'wrong');
+  } else {
+    fb.className = 'feedback-bar';
+  }
+
+  // Nav buttons
+  document.getElementById('btn-prev').disabled = qi === 0;
+  const isLast = qi === total - 1;
+  document.getElementById('btn-next').style.display = isLast ? 'none' : 'inline-flex';
+  document.getElementById('btn-finish').style.display = isLast ? 'inline-flex' : 'none';
+}
+
+function selectAnswer(idx) {
+  const qi = state.currentQuestion;
+  if (state.answers[qi] !== null) return;
+  state.answers[qi] = idx;
+  renderQuestion();
+}
+
+function nextQ() {
+  if (state.currentQuestion < state.currentTournament.questions - 1) {
+    state.currentQuestion++;
+    renderQuestion();
+  }
+}
+function prevQ() {
+  if (state.currentQuestion > 0) {
+    state.currentQuestion--;
+    renderQuestion();
+  }
+}
+function goToQ(i) {
+  state.currentQuestion = i;
+  renderQuestion();
+}
+
+/* ═══════════════════════════════════════════════
+   TIMER
+═══════════════════════════════════════════════ */
+function startTimer() {
+  stopTimer();
+  updateTimerDisplay();
+  state.quizTimer = setInterval(() => {
+    state.quizSeconds--;
+    if (state.quizSeconds <= 0) {
+      state.quizSeconds = 0;
+      stopTimer();
+      finishTournament();
+    }
+    updateTimerDisplay();
+  }, 1000);
+}
+
+function stopTimer() {
+  if (state.quizTimer) { clearInterval(state.quizTimer); state.quizTimer = null; }
+}
+
+function updateTimerDisplay() {
+  const s = state.quizSeconds;
+  const mm = String(Math.floor(s / 60)).padStart(2, '0');
+  const ss = String(s % 60).padStart(2, '0');
+  _set('timer-display', `${mm}:${ss}`);
+  const chip = document.getElementById('timer-chip');
+  chip.className = 'timer-chip' + (s < 60 ? ' urgent' : s < 180 ? ' warn' : '');
+}
+
+/* ═══════════════════════════════════════════════
+   FINISH & RESULTS
+═══════════════════════════════════════════════ */
+function finishTournament() {
+  stopTimer();
+  const total = state.currentTournament.questions;
+  const qs = questions.slice(0, total);
+  let correct = 0, score = 0;
+  state.answers.forEach((a, i) => {
+    if (a === qs[i].correct) { correct++; score += qs[i].pts; }
+  });
+  const accuracy = Math.round((correct / total) * 100);
+  const place = Math.floor(Math.random() * 18) + 2;
+  const coinsEarned = Math.floor((score / (total * 15)) * state.currentTournament.prize);
+  const ratingChange = Math.floor((accuracy / 100) * 28) - 8;
+
+  // Update state
+  state.user.coins += coinsEarned;
+  state.user.rating += ratingChange;
+  state.user.tournamentsPlayed++;
+  if (place <= 1) state.user.wins++;
+  if (place <= 10) state.user.top10++;
+  if (place <= 100) state.user.top100++;
+  state.dailyCompleted = Math.min(3, state.dailyCompleted + 1);
+
+  // Update daily bar
+  document.getElementById('daily-bar').style.width = (state.dailyCompleted / 3 * 100) + '%';
+  document.getElementById('daily-label').textContent = state.dailyCompleted + ' / 3';
+
+  // Render results
+  const placeEmojis = { 1:'🥇', 2:'🥈', 3:'🥉' };
+  const placeEmoji = placeEmojis[place] || '🏅';
+  const placeColor = place === 1 ? '#f59e0b' : place === 2 ? '#94a3b8' : place === 3 ? '#b45309' : '#818cf8';
+
+  _set('result-trophy', placeEmoji);
+  document.getElementById('result-place').textContent = '#' + place;
+  document.getElementById('result-place').style.color = placeColor;
+  _set('result-total', 'из ' + (state.currentTournament.participants + 1) + ' участников');
+  _set('res-score', score);
+  _set('res-acc', accuracy + '%');
+  _set('res-correct', correct + '/' + total);
+  _set('res-coins', '+' + coinsEarned);
+
+  const ratingRow = document.getElementById('res-rating-row');
+  const ratingEl = document.getElementById('res-rating');
+  ratingEl.textContent = (ratingChange >= 0 ? '+' : '') + ratingChange;
+  ratingEl.style.color = ratingChange >= 0 ? '#10b981' : '#ef4444';
+  ratingRow.className = 'reward-row ' + (ratingChange >= 0 ? 'reward-row-green' : 'reward-row-red');
+
+  _set('new-rating', state.user.rating);
+  const nrc = document.getElementById('new-rating-change');
+  nrc.textContent = (ratingChange >= 0 ? '+' : '') + ratingChange;
+  nrc.style.color = ratingChange >= 0 ? '#10b981' : '#ef4444';
+
+  updateHeaderStats();
+  navigate('results');
+  showToast(`Турнир завершён! +${coinsEarned} монет 🪙`);
+}
+
+/* ═══════════════════════════════════════════════
+   DAILY CHALLENGE
+═══════════════════════════════════════════════ */
+function startDaily() {
+  joinTournament('t1');
+}
+
+/* ═══════════════════════════════════════════════
+   LEADERBOARD
+═══════════════════════════════════════════════ */
+function renderLeaderboard() {
+  // Update current user in leaderboard
+  const myEntry = leaderboardData.find(e => e.isMe);
+  if (myEntry) {
+    myEntry.rating = state.user.rating;
+    myEntry.display = state.user.displayName;
+    myEntry.avatar = state.user.avatar;
+  }
+  _set('my-position-badge', '#' + (myEntry?.rank || 12));
+
+  const top3 = leaderboardData.slice(0, 3);
+  const podiumEl = document.getElementById('podium');
+  podiumEl.innerHTML = `
+    <div class="podium-card podium-2">
+      <div class="podium-avatar">${top3[1].avatar}</div>
+      <div class="podium-rank r2">2</div>
+      <div class="podium-user">${top3[1].username}</div>
+      <div class="podium-score" style="color:#94a3b8">${top3[1].rating.toLocaleString()}</div>
+    </div>
+    <div class="podium-card podium-1">
+      <div class="podium-avatar" style="font-size:2.5rem;animation:float 3s ease-in-out infinite">${top3[0].avatar}</div>
+      <div class="podium-rank r1">1</div>
+      <div class="podium-user">${top3[0].username}</div>
+      <div class="podium-score gtext-gold">${top3[0].rating.toLocaleString()}</div>
+      <div class="badge badge-gold" style="margin-top:5px;font-size:0.6rem">${top3[0].title}</div>
+    </div>
+    <div class="podium-card podium-3">
+      <div class="podium-avatar">${top3[2].avatar}</div>
+      <div class="podium-rank r3">3</div>
+      <div class="podium-user">${top3[2].username}</div>
+      <div class="podium-score" style="color:#b45309">${top3[2].rating.toLocaleString()}</div>
+    </div>`;
+
+  const rowsEl = document.getElementById('lb-rows');
+  rowsEl.innerHTML = leaderboardData.slice(3).map(e => {
+    const changeHtml = e.change > 0
+      ? `<span class="lb-change up">+${e.change}</span>`
+      : e.change < 0
+      ? `<span class="lb-change down">${e.change}</span>`
+      : `<span class="lb-change same">—</span>`;
+    return `
+    <div class="lb-row ${e.isMe ? 'me' : ''}">
+      <div class="lb-rank">${e.rank}</div>
+      <div class="lb-user">
+        <div class="lb-user-av">${e.avatar}</div>
+        <div>
+          <div class="lb-user-name">${e.username}${e.isMe ? ' 👈' : ''}</div>
+          <div class="lb-user-title">${e.title}</div>
+        </div>
+      </div>
+      <div class="lb-score">${(e.isMe ? state.user.rating : e.rating).toLocaleString()}</div>
+      <div>${changeHtml}</div>
+    </div>`;
+  }).join('');
+}
+
+function setLbFilter(el, type) {
+  document.querySelectorAll('.lb-filter').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  // UI only - same data shown
+}
+
+/* ═══════════════════════════════════════════════
+   PROFILE
+═══════════════════════════════════════════════ */
+function renderProfile() {
+  const u = state.user;
+  _set('profile-av', u.avatar);
+  _set('profile-lv', u.level);
+  _set('profile-name', u.displayName);
+  _set('profile-handle', '@' + u.username);
+  _set('profile-rating', u.rating.toLocaleString());
+
+  // Stats grid
+  const sg = document.getElementById('stats-grid');
+  const stats = [
+    { icon:'🏆', val: u.tournamentsPlayed, label:'Турниров', color:'#6366f1' },
+    { icon:'🎯', val: u.wins, label:'Побед', color:'#10b981' },
+    { icon:'⭐', val: u.top10, label:'Топ-10', color:'#f59e0b' },
+    { icon:'🌟', val: u.top100, label:'Топ-100', color:'#8b5cf6' },
+  ];
+  sg.innerHTML = stats.map(s => `
+    <div class="stat-card">
+      <div class="stat-card-icon">${s.icon}</div>
+      <div class="stat-card-val" style="color:${s.color}">${s.val}</div>
+      <div class="stat-card-label">${s.label}</div>
+    </div>`).join('');
+
+  // Stats bars
+  const sb = document.getElementById('stats-bars');
+  const bars = [
+    { label:'Рейтинг', val: u.rating, max:3000, color:'#6366f1' },
+    { label:'Точность побед', val: Math.round(u.wins/u.tournamentsPlayed*100), max:100, suffix:'%', color:'#10b981' },
+    { label:'Вхождений топ-10', val: Math.round(u.top10/u.tournamentsPlayed*100), max:100, suffix:'%', color:'#f59e0b' },
+    { label:'Серия дней', val: u.streak, max:30, suffix:' дн.', color:'#ef4444' },
+  ];
+  sb.innerHTML = bars.map(b => `
+    <div style="margin-bottom:14px">
+      <div style="display:flex;justify-content:space-between;margin-bottom:6px;font-size:0.78rem">
+        <span style="color:var(--muted)">${b.label}</span>
+        <span style="font-family:Rajdhani;font-weight:700;color:${b.color}">${b.val}${b.suffix||''}</span>
+      </div>
+      <div class="pbar-track">
+        <div class="pbar-fill" style="width:${Math.min(100,b.val/b.max*100)}%;background:linear-gradient(90deg,${b.color},${b.color}88)"></div>
+      </div>
+    </div>`).join('');
+
+  // Achievements
+  const ag = document.getElementById('ach-grid');
+  const rarityColors = { common:'#94a3b8', rare:'#3b82f6', epic:'#8b5cf6', legendary:'#f59e0b' };
+  ag.innerHTML = achievements.map(a => `
+    <div class="ach-card ${a.unlocked ? 'unlocked' : 'locked'}" style="${a.unlocked ? 'border-color:'+rarityColors[a.rarity]+'35' : ''}">
+      <div class="ach-emoji">${a.emoji}</div>
+      <div class="ach-name">${a.name}</div>
+      <div class="ach-desc">${a.desc}</div>
+      <div class="shop-rarity r-${a.rarity}" style="margin-top:6px">${a.rarity.toUpperCase()}</div>
+    </div>`).join('');
+
+  renderShopTab('shop-grid', 'shop-filters', 'all');
+}
+
+function switchTab(tab, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  ['stats','achievements','shop'].forEach(t => {
+    document.getElementById('tab-' + t).style.display = t === tab ? 'block' : 'none';
+  });
+}
+
+/* ═══════════════════════════════════════════════
+   SHOP
+═══════════════════════════════════════════════ */
+let shopFilter = 'all';
+
+function renderShopTab(gridId, filterId, cat) {
+  const rarityColors = { common:'#94a3b8', rare:'#3b82f6', epic:'#8b5cf6', legendary:'#f59e0b' };
+  const cats = ['all','avatar','frame','title'];
+  const catLabels = { all:'Все', avatar:'Аватары', frame:'Рамки', title:'Титулы' };
+  const catEmoji = { all:'🛍️', avatar:'🦊', frame:'🖼️', title:'🏷️' };
+
+  const fEl = document.getElementById(filterId);
+  if (fEl) {
+    fEl.innerHTML = cats.map(c => `
+      <button class="lb-filter${cat===c?' active':''}" onclick="filterShop('${c}','${gridId}','${filterId}')">${catEmoji[c]} ${catLabels[c]}</button>
+    `).join('');
+  }
+
+  const gEl = document.getElementById(gridId);
+  if (!gEl) return;
+  const items = cat === 'all' ? shopItemsData : shopItemsData.filter(i => i.cat === cat);
+  gEl.innerHTML = items.map(item => {
+    const owned = state.ownedItems.includes(item.id);
+    const canAfford = state.user.coins >= item.price;
+    const rl = item.rarity;
+    const rc = rarityColors[rl];
+    return `
+    <div class="shop-card ${owned ? 'owned' : ''} ${rl === 'legendary' ? 'legendary-glow' : ''}">
+      <div class="shop-card-top-line" style="background:linear-gradient(90deg,transparent,${rc},transparent)"></div>
+      ${owned ? '<div class="owned-check">✓</div>' : ''}
+      <div class="shop-img">${item.img}</div>
+      <div class="shop-name">${item.name}</div>
+      <div class="shop-desc">${item.desc}</div>
+      <div class="shop-rarity r-${rl}">${rl.toUpperCase()}</div>
+      ${owned
+        ? `<div class="badge badge-green" style="margin-top:8px;width:100%;justify-content:center">✓ Owned</div>`
+        : `<button class="btn btn-sm btn-full ${canAfford ? 'btn-primary' : 'btn-ghost'}"
+              style="${canAfford ? 'background:linear-gradient(135deg,'+rc+','+rc+'cc);border-color:'+rc+'40' : ''};margin-top:8px"
+              onclick="buyItem('${item.id}')" ${canAfford ? '' : 'disabled'}>
+              🪙 ${item.price.toLocaleString()}
+           </button>`
+      }
+    </div>`;
+  }).join('');
+}
+
+function filterShop(cat, gridId, filterId) {
+  renderShopTab(gridId, filterId, cat);
+}
+
+function renderShopPage() {
+  renderShopTab('shop-grid2', 'shop-filters2', 'all');
+}
+
+function buyItem(id) {
+  const item = shopItemsData.find(i => i.id === id);
+  if (!item) return;
+  if (state.user.coins < item.price) {
+    showToast('Недостаточно монет! 😔', true);
+    return;
+  }
+  if (state.ownedItems.includes(id)) return;
+
+  state.user.coins -= item.price;
+  state.ownedItems.push(id);
+  updateHeaderStats();
+
+  // Re-render current shop
+  if (currentScreen === 'shop') renderShopPage();
+  if (currentScreen === 'profile') renderShopTab('shop-grid', 'shop-filters', 'all');
+
+  showToast(`${item.img} ${item.name} куплен! 🎉`);
+}
+
+/* ═══════════════════════════════════════════════
+   TOAST
+═══════════════════════════════════════════════ */
+let toastTimer = null;
+function showToast(msg, isError = false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.background = isError ? 'rgba(239,68,68,0.15)' : 'rgba(16,185,129,0.15)';
+  t.style.borderColor = isError ? 'rgba(239,68,68,0.4)' : 'rgba(16,185,129,0.4)';
+  t.style.color = isError ? '#fca5a5' : '#6ee7b7';
+  t.classList.add('show');
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+/* ═══════════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════════ */
+renderTournaments();
+updateHeaderStats();
+</script>
+</body>
+</html>
